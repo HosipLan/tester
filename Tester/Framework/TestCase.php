@@ -74,7 +74,7 @@ class TestCase
 				$data[] = array();
 			}
 
-			foreach ($data as $args) {
+			foreach ($data as $key => $args) {
 				try {
 					if ($info['throws']) {
 						$tmp = $this;
@@ -89,6 +89,9 @@ class TestCase
 					}
 				} catch (AssertException $e) {
 					$e->message .= " in {$method->getName()}" . (substr(Dumper::toLine($args), 5));
+					if ($args) {
+						$e->message .= " data set " . (is_numeric($key) ? $key - 1 : $key);
+					}
 					throw $e;
 				}
 			}
