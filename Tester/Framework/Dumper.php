@@ -246,8 +246,14 @@ class Dumper
 				. ": {$e->getMessage()}";
 		}
 
-		$s = "\033[1;37m$message\033[0m\n\n"
-			. (isset($stored) ? "diff " . escapeshellarg($stored[0]) . " " . escapeshellarg($stored[1]) . "\n\n" : '');
+		$s = "\033[1;37m$message\033[0m\n\n";
+
+		if (isset($stored)) {
+			$left = escapeshellarg($stored[0]);
+			$right = escapeshellarg($stored[1]);
+			$s .= `diff --side-by-side $left $right | colordiff`;
+			$s .= "\n\n";
+		}
 
 		foreach ($trace as $item) {
 			$item += array('file' => NULL);
